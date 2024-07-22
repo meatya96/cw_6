@@ -1,0 +1,19 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    {% if view.object.pk %}Редактирование рассылки{% else %}Создание рассылки{% endif %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>{% if view.object.pk %}Редактирование рассылки{% else %}Создание рассылки{% endif %}</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="{% url 'main:newsletter_list' %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+{% endblock %}
+

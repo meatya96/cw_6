@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список попыток рассылки</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar, .footer, .btn-primary {
+            background-color: #d87093; /* Мягкий розовый */
+        }
+        .btn-primary {
+            border-color: #d87093; /* Мягкий розовый */
+        }
+        .card-header {
+            background-color: #f2b2c4; /* Светло-розовый */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">Newsletter Service</a>
+        {% include 'main/includes/inc_main_menu.html' %}
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h2>{{ newsletter }}</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Рассылка</th>
+                            <th>Дата и время отправки</th>
+                            <th>Статус</th>
+                            <th>Ответ сервера</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attempt in log_list %}
+                            <tr>
+                                <td>{{ attempt.id }}</td>
+                                <td>{{ attempt.newsletter }}</td>
+                                <td>{{ attempt.attempt_time }}</td>
+                                <td>{{ attempt.get_status_display }}</td>
+                                <td>{{ attempt.server_response }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer text-center mt-4 py-3">
+        <div class="container">
+            <span class="text-muted">&copy; 2024 Newsletter Service</span>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="{% url 'main:client_list' %}">Список клиентов</a></li>
+                <li class="list-inline-item"><a href="{% url 'main:sendattemp_list' %}">Список попыток</a></li>
+                <li class="list-inline-item"><a href="{% url 'main:newsletter_form' %}">Создать рассылку</a></li>
+                <li class="list-inline-item"><a href="{% url 'main:client_form' %}">Создать клиента</a></li>
+                <li class="list-inline-item"><a href="{% url 'blog:post_form' %}">Создать пост</a></li>
+                <li class="list-inline-item"><a href="{% url 'blog:post_list' %}">Список постов</a></li>
+                {% if user.is_authenticated %}
+                    <li class="list-inline-item"><a href="{% url 'users:logout' %}">Выйти</a></li>
+                {% else %}
+                    <li class="list-inline-item"><a href="{% url 'users:register' %}">Регистрация</a></li>
+                    <li class="list-inline-item"><a href="{% url 'users:login' %}">Войти</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

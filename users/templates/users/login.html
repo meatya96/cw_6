@@ -1,0 +1,32 @@
+
+{% extends 'main/base.html' %}
+
+{% block title %}
+   <title>Вход в аккаунт</title>
+{% endblock %}
+
+{% block content %}
+<div class="col 12">
+    <form class="row" method="post" enctype="multipart/form-data">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <h3 class="card-header">
+                            <div class="card-title">Вход</div>
+                        </h3>
+                        <div class="card-body">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-success">Войти</button>
+                        </div>
+                        <a href="{% url 'users:password_reset' %}">Восстановить пароль</a>
+                    </body>
+                    </html>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

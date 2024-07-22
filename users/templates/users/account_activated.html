@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+   <title>Аккаунт активирован</title>
+{% endblock %}
+
+
+{% block content %}
+    <body>
+        <h1>Ваш аккаунт успешно активирован!</h1>
+        <p>Теперь вы можете войти в систему, используя свои учетные данные.</p>
+        <a href="{% url 'users:login' %}">Войти</a>
+    </body>
+{% endblock %}
