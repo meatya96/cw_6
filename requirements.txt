@@ -4,11 +4,11 @@ Django==5.0.6
 django-apscheduler==0.6.2
 django-crontab==0.7.1
 djangorestframework==3.15.1
-nullable==0.2.0
-psycopg-binary==3.1.19
 psycopg2-binary==2.9.9
 python-dotenv==1.0.1
 pytz==2024.1
 six==1.16.0
 sqlparse==0.5.0
 tzlocal==5.2
+pillow==10.4.0
+django-redis

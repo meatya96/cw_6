@@ -9,11 +9,8 @@ def get_queryset():
         key = 'post_list'
         queryset = cache.get(key)
         if not queryset:
-            queryset = list(Post.objects.filter(is_published=True))
-            cache.set(key, queryset, 60 * 60)
-        else:
-            print("Using cached queryset")
+            queryset = Post.objects.filter(is_published=True)
+            cache.set(key, queryset, 5)
     else:
-        queryset = list(Post.objects.filter(is_published=True))
-    print(f"Queryset: {queryset}")
+        queryset = Post.objects.filter(is_published=True)
     return queryset

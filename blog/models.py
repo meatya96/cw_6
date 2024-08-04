@@ -13,7 +13,7 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-    def count_of_views(self):
+    def increment_views(self, views_count: int = 1) -> None:
         self.views += 1
         self.save()
 

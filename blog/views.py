@@ -8,12 +8,10 @@ from blog.services import get_queryset
 
 class PostListView(ListView):
     """ Post list edpoint """
-    model = Post
     extra_context = {
         "title": "All posts"
     }
     template_name = 'blog/post_list.html'
-    queryset = get_queryset()
 
     def get_queryset(self):
         return get_queryset()
@@ -27,8 +25,7 @@ class PostDetailView(DetailView):
 
     def get_object(self, queryset=None):
         object = super().get_object(queryset)
-        object.count_of_views
-        object.save()
+        object.increment_views()
         return object
 
 
