@@ -37,10 +37,9 @@ class RegisterView(CreateView):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         verification_link = self.request.build_absolute_uri(reverse('users:account_activated'))
 
-        user_email = user.email
         subject = "Подтверждение регистрации"
         message = f"Добро пожаловать! Подтвердите вашу регистрацию по следующей ссылке: {verification_link}?uid={uid}&token={token}"
-        send_email(subject, message, [user_email], newsletter=None)
+        user.email_user(subject, message)
 
         return super().form_valid(form)
 
@@ -113,4 +112,7 @@ class PasswordResetView(View):
             return render(request, 'users/password_reset.html', {'error': 'Пользователь с таким email не найден.'})
 
 class AccountActivatedView(View):
-    template_name = 'users/account_activated.html'
+    def get(sef, request, *args, **kwargs):
+        print(request.GET.get('uid'))
+        print(request.GET.get('token'))
+        return render(request,'users/account_activated.html')
