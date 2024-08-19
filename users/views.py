@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView as AuthLogoutView
+from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes
@@ -13,6 +14,7 @@ from django.views.generic import CreateView, UpdateView
 from django.views import View
 from django.urls import reverse
 
+from config.settings import EMAIL_HOST_USER
 from main.services import send_email
 from users.forms import UserProfileForm, UserRegisterForm, PasswordResetForm
 from users.models import User
@@ -22,8 +24,7 @@ class RegisterView(CreateView):
     model = User
     form_class = UserRegisterForm
     template_name = 'users/register.html'
-    success_url = reverse_lazy('users:register_success')
-    object = None
+
 
     def get_success_url(self):
         return reverse_lazy('users:register_success')
@@ -35,10 +36,16 @@ class RegisterView(CreateView):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         verification_link = self.request.build_absolute_uri(reverse('users:account_activated'))
+        print(verification_link)
 
         subject = "Подтверждение регистрации"
         message = f"Добро пожаловать! Подтвердите вашу регистрацию по следующей ссылке: {verification_link}?uid={uid}&token={token}"
-        user.email_user(subject, message)
+        send_mail(
+            subject=subject,
+            message=message,  # сообщение
+            from_email=EMAIL_HOST_USER,  # с какого имейла отправляем
+            recipient_list=[user.email]  # список имейлов на которфе отправляем
+        )
 
         return super().form_valid(form)
 

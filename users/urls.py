@@ -1,13 +1,13 @@
 from django.contrib.auth.views import PasswordResetDoneView
 from django.urls import path
-from users.views import RegisterView, registration_success, ProfileView, PasswordResetView, LoginView, LogoutView, \
+from users.views import RegisterView, email_verification, ProfileView, PasswordResetView, LoginView, LogoutView, \
     AccountActivatedView
 
 app_name = 'users'
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
-    path('register_success/', registration_success, name='register_success'),
+    path('register_success/', email_verification, name='register_success'),
     path('login/', LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', LogoutView.as_view(next_page='main:newsletter_list'), name='logout'),
     path('profile/', ProfileView.as_view(), name='profile'),

@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="card-header">User Registration</div>
                 <div class="card-body">
-                    <form method="post" enctype="multipart/form-data" class="mb-4">
+                    <form method="POST" enctype="multipart/form-data" class="mb-4">
                         {% csrf_token %}
                         {{ form.as_p }}
                         <button type="submit" class="btn btn-primary">Register</button>
