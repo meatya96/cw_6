@@ -5,14 +5,13 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView as AuthLogoutView
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.views.generic import CreateView, UpdateView
 from django.views import View
 from django.urls import reverse
-
 
 from main.services import send_email
 from users.forms import UserProfileForm, UserRegisterForm, PasswordResetForm
@@ -44,12 +43,11 @@ class RegisterView(CreateView):
         return super().form_valid(form)
 
 
-
-
-
-
-def registration_success(request):
-    return render(request, 'users/register_success.html')
+def email_verification(request, token):
+    user = get_object_or_404(User, token=token)
+    user.is_active = True
+    user.save()
+    return redirect(reverse('users/register_success.html'))
 
 
 class ProfileView(UpdateView):
@@ -76,6 +74,7 @@ class LoginView(LoginView):
     template_name = 'users/login.html'
     form_class = AuthenticationForm
 
+
 class LogoutView(AuthLogoutView):
     next_page = "users:login"
 
@@ -87,6 +86,7 @@ class LogoutView(AuthLogoutView):
             # Перенаправляем запрос в PasswordResetView
             return PasswordResetView.as_view()(request)
         return super().post(request, *args, **kwargs)
+
 
 class PasswordResetView(View):
     form_class = PasswordResetForm
@@ -111,8 +111,9 @@ class PasswordResetView(View):
         except User.DoesNotExist:
             return render(request, 'users/password_reset.html', {'error': 'Пользователь с таким email не найден.'})
 
+
 class AccountActivatedView(View):
     def get(sef, request, *args, **kwargs):
         print(request.GET.get('uid'))
         print(request.GET.get('token'))
-        return render(request,'users/account_activated.html')
+        return render(request, 'users/account_activated.html')
