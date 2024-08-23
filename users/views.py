@@ -27,7 +27,7 @@ class RegisterView(CreateView):
 
 
     def get_success_url(self):
-        return reverse_lazy('users:register_success')
+        return reverse_lazy('users:account_activated')
 
     def form_valid(self, form):
         user = form.save()
@@ -35,6 +35,8 @@ class RegisterView(CreateView):
 
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
+        user.token = token
+        user.save()
         verification_link = self.request.build_absolute_uri(reverse('users:account_activated'))
         print(verification_link)
 
@@ -48,13 +50,6 @@ class RegisterView(CreateView):
         )
 
         return super().form_valid(form)
-
-
-def email_verification(request, token):
-    user = get_object_or_404(User, token=token)
-    user.is_active = True
-    user.save()
-    return redirect(reverse('users/register_success.html'))
 
 
 class ProfileView(UpdateView):
@@ -80,6 +75,9 @@ class ProfileView(UpdateView):
 class LoginView(LoginView):
     template_name = 'users/login.html'
     form_class = AuthenticationForm
+
+    def get_success_url(self):
+        return reverse_lazy('main:newsletter_list')
 
 
 class LogoutView(AuthLogoutView):
@@ -121,6 +119,8 @@ class PasswordResetView(View):
 
 class AccountActivatedView(View):
     def get(sef, request, *args, **kwargs):
-        print(request.GET.get('uid'))
-        print(request.GET.get('token'))
+        token = request.GET.get('token')
+        user = get_object_or_404(User, token=token)
+        user.is_active = True
+        user.save()
         return render(request, 'users/account_activated.html')

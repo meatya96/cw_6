@@ -28,6 +28,7 @@ class User(AbstractUser):
     middle_name = models.CharField(max_length=100, verbose_name='Отчество', **NULLABLE)
     email = models.EmailField(unique=True, verbose_name='почта')
     message = models.TextField(verbose_name='Комментарий',  **NULLABLE)
+    token = models.CharField(max_length=150, verbose_name='токен', **NULLABLE)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
